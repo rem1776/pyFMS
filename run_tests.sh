@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 function create_input() {
     pytest -m "create" $1
