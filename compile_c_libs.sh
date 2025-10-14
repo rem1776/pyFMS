@@ -3,11 +3,20 @@
 set -ex
 #set -o posix
 
-#yaml includes
-YAML_FLAGS+=""
+# save us some time by finding a libyaml path in LD_LIBRARY_PATH
+IFS=":"
+read -a tokenz <<< ${LD_LIBRARY_PATH}
+for t in ${tokenz[@]}; do
+  path="$( echo ${t} | grep "libyaml" || true )"
+  test "$path" && break 
+done
 
+yaml_root=$(dirname $path)
+
+#yaml includes
+YAML_FLAGS+="-I${yaml_root}/include"
 #yaml libraries
-YAML_LDFLAGS+=""
+YAML_LDFLAGS+="-L${yaml_root}/lib"
 
 #fortran netcdf includes
 NF_FLAGS+=$(nf-config --fflags)
@@ -19,7 +28,7 @@ NC_FLAGS+=$(nc-config --cflags)
 NC_LDFLAGS=$(nc-config --libs | nf-config --flibs)
 
 #fortran and c compiler
-FC=mpif90
+FC=mpifort
 CC=mpicc
 
 #fms fortran, c, library compiler flags
