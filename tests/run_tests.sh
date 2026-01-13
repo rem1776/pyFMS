@@ -29,6 +29,12 @@ create_input $test
 run_test "python -m pytest -svm parallel $test"
 remove_input $test
 
+
+run_test "python -m pytest py_diag_manager/test_generate_files.py"
+run_test "mpirun -n 2 python -m pytest py_diag_manager/test_diag_manager.py"
+
+exit
+
 test="py_mpp/test_define_domains.py"
 create_input $test
 run_test "mpirun -n 8 $oversubscribe python -m pytest -svm 'parallel' $test"

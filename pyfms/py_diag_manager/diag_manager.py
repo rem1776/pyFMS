@@ -16,6 +16,8 @@ from pyfms.utils.ctypes_utils import (
     set_list,
 )
 
+import pyfms.py_mpp.mpp as mpp
+
 
 DIAG_ALL = None
 DIAG_OCEAN = None
@@ -421,6 +423,8 @@ def send_data(
     set_array(field, arglist)
     err_msg = set_c_str(" ", arglist)
     set_c_bool(convert_cf_order, arglist)
+
+    print(f"pe:{mpp.pe()}\tid:{diag_field_id}\tfield.shape:{field.shape}")
 
     return cfms_diag_send_data(*arglist)
 
